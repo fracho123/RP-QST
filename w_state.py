@@ -3,15 +3,15 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-snapbase = 'logs/'
+snapbase = 'PyTorchDiscLogs/'
 
 
-kk = [2,3,4,5,6,7]
-epoch = [500]
-batch = [100]
+kk = [5,6,7,8]
+epoch = [500,1000]
+batch = [300]
 bounds = 7
 num_qubit = 3
-models = ['normal','log_normal']
+models = ['uniform','normal','log_normal']
 
 data = w_state_3q()
 
@@ -46,9 +46,10 @@ for i in range(len(kk)):
 
                 name = str(kk[i]) + '_' + str(num_qubit) + '_' + str(epoch[j]) + '_' + str(batch[k]) + '_' + str(bounds)\
                        + '_' + str(models[mo]) + '_loss.png'
-                address = 'logs/Generator_And_Discriminator_Loss_Plots/' + name
+                address = snapbase+'Generator_And_Discriminator_Loss_Plots/' + name
                 plt.savefig(address)
                 plt.close()
+
 
                 # Plot progress w.r.t relative entropy
                 plt.figure(figsize=(6, 5))
@@ -60,7 +61,7 @@ for i in range(len(kk)):
 
                 name = str(kk[i]) + '_' + str(num_qubit) + '_' + str(epoch[j]) + '_' + str(batch[k]) + '_' + str(bounds)\
                        + '_' + str(models[mo]) + '_entr.png'
-                address = 'logs/Entropy_Plots/' + name
+                address = snapbase+'Entropy_Plots/' + name
                 plt.savefig(address)
                 plt.close()
 
@@ -79,16 +80,16 @@ for i in range(len(kk)):
                 samples_g = np.array(samples_g)
                 samples_g = samples_g.flatten()
                 num_bins = len(prob_g)
-                plt.bar(samples_g, prob_g, color='royalblue', width=0.8, label='Simulation')
-                plt.plot(log_normal, '-o', label='W-State Measurements', color='deepskyblue', linewidth=4, markersize=12)
+                plt.bar(samples_g, prob_g, color='royalblue', width=0.8, label='Results of the QGAN')
+                plt.plot(log_normal, '-o', label='Initial W-State Measurements', color='deepskyblue', linewidth=4, markersize=12)
                 plt.xticks(np.arange(min(samples_g), max(samples_g) + 1, 1.0))
                 plt.grid()
-                plt.xlabel('states')
-                plt.ylabel('p(x)')
+                plt.xlabel('states of 3 qubits')
+                plt.ylabel('probability of each state')
                 plt.legend(loc='best')
 
                 name = str(kk[i]) + '_' + str(num_qubit) + '_' + str(epoch[j]) + '_' + str(batch[k]) + '_' + str(bounds)\
                        + '_' + str(models[mo]) + '_plot.png'
-                address = 'logs/Probability_Plots/' + name
+                address = snapbase+'Probability_Plots/' + name
                 plt.savefig(address)
                 plt.close()

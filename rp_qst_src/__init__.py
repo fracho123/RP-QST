@@ -15,14 +15,14 @@ from qiskit.aqua.components.uncertainty_models import NormalDistribution, LogNor
 from qiskit.aqua.components.variational_forms import RY
 
 from qiskit.aqua.algorithms import QGAN
-from qiskit.aqua.components.neural_networks import NumPyDiscriminator
+from qiskit.aqua.components.neural_networks import NumPyDiscriminator, PyTorchDiscriminator
 
 from qiskit.aqua import aqua_globals, QuantumInstance
 from qiskit.aqua.components.initial_states import Custom
 
 from qiskit import BasicAer
 
-
+from scipy.stats import weibull_min
 
 # In[17]:
 
@@ -126,6 +126,14 @@ def w_state_3q():
 
     return real_data
 
+def weibull_dist(a, lam, N, bounds):
+    data = weibull_min.rvs(a, loc=0, scale=lam, size=N)
+    data_min = np.min(data)
+    data = data - data_min
+    data_max = np.max(data)
+    data = data*bounds[1]/data_max
+    return data
+
 
 # last parameter for Q-GAN method is a string to indicate which uncertainty model you want to test
 # 'normal' = Normal Distribution
@@ -205,7 +213,7 @@ def QGAN_method(kk, num_qubit, epochs, batch, bound, snap, data, model):
     # Set quantum generator
     qgan.set_generator(generator_circuit=g_circuit)
     # Set classical discriminator neural network
-    discriminator = NumPyDiscriminator(len(num_qubits))
+    discriminator = PyTorchDiscriminator(len(num_qubits))
     qgan.set_discriminator(discriminator)
 
     # In[53]:

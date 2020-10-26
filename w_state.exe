@@ -1,3 +1,0 @@
-source ~/.bashrc
-conda activate py3
-python w_state.py
